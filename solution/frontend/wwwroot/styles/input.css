@@ -1,0 +1,3 @@
+﻿@import "tailwindcss";
+
+/*npx @tailwindcss/cli -i ./wwwroot/styles/input.css -o ./wwwroot/styles/tailwind.css --watch*/

@@ -1,0 +1,33 @@
+services:
+  postgres:
+    image: postgres
+    container_name: homescada_postgres
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - ./docker/postgres/data:/var/lib/postgresql/data
+
+  #   mongo:
+  #     image: mongo
+  #     container_name: homescada_mongo
+  #     restart: unless-stopped
+  #     env_file:
+  #       - .env
+  #     ports:
+  #       - "${MONGO_PORT}:27017"
+  #     volumes:
+  #       - ./docker/mongo/data:/data/db
+
+  redis:
+    image: redis
+    container_name: homescada_redis
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "${REDIS_PORT}:6379"
+    volumes:
+      - ./docker/redis/data:/data
