@@ -1,4 +1,4 @@
-# HomeSCADA (during development)
+# District Digital Twin (during development)
 
 ![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen)
 ![Tech Stack](https://img.shields.io/badge/Stack-%20.NET%20|%20Python-blue)
@@ -22,13 +22,13 @@ screenshots
 
 ## 🚀 Technical Highlights
 
-### 🔙 Backend (.NET 9.0 & PostgreSQL)
+### 🔙 Backend (.NET 10 & PostgreSQL)
 
 - Central Orchestrator: Manages room schedules, user setpoints, and historical data.
 - Real-time Communication: High-speed data exchange via WebSockets between the Simulation Engine and the UI.
 - Data Persistence: PostgreSQL handles time-series data for long-term efficiency analysis.
 
-### 📲 Frontend (.NET 9.0 & Blazor)
+### 📲 Frontend (.NET 10 & Blazor)
 
 - Interactive Dashboard: Real-time visualization of room temperatures and device states.
 - 3D Digital Twin: Integration with a 3D model (Blender) for spatial temperature mapping.
@@ -43,7 +43,7 @@ screenshots
 ### 🛠️ DevOps & Infrastructure
 
 - Languages: C#, Python 3.x, HTML/CSS.
-- Frameworks: .NET 9.0 (ASP.NET Core, Blazor WebAssembly).
+- Frameworks: .NET 10 (ASP.NET Core, Blazor WebAssembly).
 - Libraries (Python): Pandas (Weather data), NumPy (Interpolation/Math), WebSockets.
 - Visualization: Blender (3D Modeling).
 - Database: PostgreSQL.

@@ -3,3 +3,4 @@ docker/postgres/data/
 docker/mongo/data/
 .env
 .idea
+README.md
