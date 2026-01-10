@@ -44,7 +44,7 @@ resource "cloudflare_tunnel_config" "ddt_config" {
   config {
     ingress_rule {
       hostname = "district-digital-twin.260824.xyz"
-      service  = "http://website:8080"
+      service  = "http://website:80"
     }
     ingress_rule {
       hostname = "district-digital-twin-portainer.260824.xyz"
