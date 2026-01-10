@@ -1,0 +1,10 @@
+﻿FROM mcr.microsoft.com/dotnet/sdk:10.0
+WORKDIR /app
+
+COPY . .
+
+WORKDIR /app/website
+
+EXPOSE 8081
+
+ENTRYPOINT ["dotnet", "watch", "run", "--project", "/app/website/website.csproj", "--no-launch-profile", "--urls", "http://+:8081"]

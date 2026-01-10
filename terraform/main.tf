@@ -43,8 +43,8 @@ resource "cloudflare_tunnel_config" "ddt_config" {
 
   config {
     ingress_rule {
-      hostname = "district-digital-twin-api.260824.xyz"
-      service  = "http://api:8080"
+      hostname = "district-digital-twin.260824.xyz"
+      service  = "http://website:8080"
     }
     ingress_rule {
       hostname = "district-digital-twin-portainer.260824.xyz"
@@ -62,7 +62,7 @@ resource "cloudflare_tunnel_config" "ddt_config" {
 
 resource "cloudflare_record" "ddt_dns" {
   zone_id = var.zone_id
-  name    = "district-digital-twin-api"
+  name    = "district-digital-twin"
   value   = "${cloudflare_tunnel.ddt_tunnel.id}.cfargotunnel.com"
   type    = "CNAME"
   proxied = true
