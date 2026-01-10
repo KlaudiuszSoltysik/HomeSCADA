@@ -1,6 +1,5 @@
-docker/redis/data/
-docker/postgres/data/
-docker/mongo/data/
+docker/*
 .env
-.idea
+.idea/*
 README.md
+blender/*
