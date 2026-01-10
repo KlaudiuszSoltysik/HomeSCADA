@@ -30,7 +30,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__PostgresConnection=Host=postgres-dev;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
     ports:
-      - "${CSHARP_PORT_DEV}:8080"
+      - "${API_PORT_DEV}:8080"
     volumes:
       - ./csharp:/app
       - /app/api/obj
@@ -38,6 +38,26 @@ services:
     depends_on:
       postgres-dev:
         condition: service_healthy
+    networks:
+      - ddt_net
+
+  website-dev:
+    container_name: z_ddt_website_dev
+    build:
+      context: ./csharp
+      dockerfile: website/Dockerfile.dev
+    environment:
+      - DOTNET_USE_POLLING_FILE_WATCHER=true
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "${WEBSITE_PORT_DEV}:8081"
+    volumes:
+      - ./csharp:/app
+      - /app/website/obj
+      - /app/website/bin
+    depends_on:
+      api-dev:
+        condition: service_started
     networks:
       - ddt_net
 

@@ -72,6 +72,27 @@ services:
         reservations:
           memory: 256M
 
+  website:
+    container_name: ddt_website
+    image: ghcr.io/klaudiuszsoltysik/district-digital-twin/website:latest
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ApiSettings__BaseUrl=http://api:8080
+    depends_on:
+      api:
+        condition: service_started
+    networks:
+      - ddt_net
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+        reservations:
+          memory: 256M
+
   watchtower:
     image: containrrr/watchtower
     container_name: ddt_watchtower

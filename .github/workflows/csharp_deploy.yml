@@ -15,6 +15,7 @@ on:
 env:
   REGISTRY: ghcr.io
   API_NAME: KlaudiuszSoltysik/district-digital-twin/api
+  WEBSITE_NAME: KlaudiuszSoltysik/district-digital-twin/website
 
 jobs:
   test:
@@ -65,6 +66,25 @@ jobs:
           push: true
           tags: ${{ steps.meta-backend.outputs.tags }}
           labels: ${{ steps.meta-backend.outputs.labels }}
+
+      # Build and push website image
+      - name: Extract metadata for website
+        id: meta-website
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.WEBSITE_NAME }}
+          tags: |
+            type=raw,value=latest
+            type=sha
+
+      - name: Build and push website
+        uses: docker/build-push-action@v5
+        with:
+          context: ./csharp
+          file: ./csharp/website/Dockerfile
+          push: true
+          tags: ${{ steps.meta-website.outputs.tags }}
+          labels: ${{ steps.meta-website.outputs.labels }}
 
       # Generate and commit documentation
       - name: Setup .NET for docs generation
