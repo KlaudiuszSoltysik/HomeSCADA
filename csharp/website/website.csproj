@@ -72,4 +72,9 @@
       </Content>
     </ItemGroup>
 
+  <Target Name="Tailwind" BeforeTargets="Build;Publish">
+    <Exec Command="npm install" />
+    <Exec Command="npm run build" />
+  </Target>
+
 </Project>
