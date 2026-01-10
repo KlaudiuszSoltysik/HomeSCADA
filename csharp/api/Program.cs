@@ -5,30 +5,32 @@ using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddOpenApi();
 builder.Services.AddControllers();
-builder.Services.AddDbContext<PostgresContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
+builder.Services.AddOpenApi();
+
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<SimulationService>();
+
+if (builder.Environment.EnvironmentName != "Testing")
+{
+    builder.Services.AddDbContext<PostgresContext>(options =>
+        options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
+}
+
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.SetIsOriginAllowed(_ => true)
-            .AllowAnyHeader()
+        policy
+            .AllowAnyOrigin()
             .AllowAnyMethod()
-            .AllowCredentials();
+            .AllowAnyHeader();
     });
 });
-builder.WebHost.UseUrls("https://localhost:6101");
 
 var app = builder.Build();
 
-app.UseHttpsRedirection();
-app.MapOpenApi();
-app.MapScalarApiReference();
-app.UseCors();
+app.MapHub<SimulationHub>("/simulation-hub");
 app.UseWebSockets();
 app.Use(async (context, next) =>
 {
@@ -43,7 +45,21 @@ app.Use(async (context, next) =>
         await next();
     }
 });
+
+if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Testing"))
+{
+    app.MapOpenApi();
+    app.MapScalarApiReference();
+}
+
+app.UseCors();
+
+app.UseAuthorization();
+
 app.MapControllers();
-app.MapHub<SimulationHub>("/simulation-hub");
 
 app.Run();
+
+public partial class Program
+{
+}
