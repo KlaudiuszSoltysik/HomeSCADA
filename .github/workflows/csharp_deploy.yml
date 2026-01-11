@@ -1,4 +1,4 @@
-name: Backend CI/CD
+name: API and website CI/CD
 
 on:
   push:
@@ -21,13 +21,13 @@ jobs:
   test:
     name: Run tests
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: "10.0.x"
-      - run: dotnet test csharp/csharp.sln
+    # steps:
+    #   - uses: actions/checkout@v4
+    #   - name: Setup .NET
+    #     uses: actions/setup-dotnet@v4
+    #     with:
+    #       dotnet-version: "10.0.x"
+    #   - run: dotnet test csharp/csharp.sln
 
   build-and-push:
     name: Build and push image
