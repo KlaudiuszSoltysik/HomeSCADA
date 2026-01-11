@@ -240,6 +240,8 @@
 </div>
 
 @inject IJSRuntime Js
+@inject IConfiguration Config
+@inject NavigationManager NavManager
 
 @code {
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -278,8 +280,11 @@
         PrepareCharts();
         UpdateSpeedFactorValue();
 
+        var baseUrl = Config["ApiSettings:BaseUrl"];
+
         _hubConnection = new HubConnectionBuilder()
-            .WithUrl("https://localhost:6101/simulation-hub")
+            .WithUrl(NavManager.ToAbsoluteUri($"{baseUrl}/simulation-hub"))
+            .WithAutomaticReconnect()
             .Build();
 
         _hubConnection.On<SimulationData>("UpdateSimulationData", async data =>

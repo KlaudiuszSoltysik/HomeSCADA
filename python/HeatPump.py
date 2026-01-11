@@ -1,7 +1,4 @@
-﻿import copy
-import numpy as np
-
-from SimulationEngine import SimulationEngine
+﻿import numpy as np
 
 class HeatPump:
     def __init__(self, nominal_heating_power_w=8000.0, nominal_cooling_power_w=7000.0,

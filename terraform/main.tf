@@ -1,4 +1,12 @@
 terraform {
+    backend "remote" {
+    organization = "klaudiusz_soltysik_development"
+
+    workspaces {
+      name = "district-digital-twin"
+    }
+  }
+
   required_providers {
     cloudflare = {
       source  = "cloudflare/cloudflare"

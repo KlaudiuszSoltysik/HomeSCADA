@@ -1,10 +1,11 @@
 docker/*
 .env
 .idea/*
-README.md
 blender/*
 terraform/*
 !terraform/main.tf
 !terraform/.terraform.lock.hcl
 backups/*
 csharp/.idea/*
+
+README.md
