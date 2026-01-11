@@ -7,7 +7,7 @@ class Building:
         self.rooms = {}
         self.walls = []
 
-        self.heat_pump = HeatPump(heating_cop=4.0, cooling_eer=3.5, heating_power=80.0, cooling_power=40.0)
+        self.heat_pump = HeatPump()
 
     def add_room(self, room):
         self.rooms[room.name] = room

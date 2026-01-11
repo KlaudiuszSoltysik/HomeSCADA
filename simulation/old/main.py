@@ -179,7 +179,7 @@ if __name__ == "__main__":
     weather_provider = WeatherProvider("weather_history.csv")
     engine = SimulationEngine(b)
 
-    WS_SERVER_URL = "wss://localhost:6101/ws"
+    WS_SERVER_URL = "ws://localhost:6101/ws"
 
     try:
         ws = create_connection(WS_SERVER_URL)
