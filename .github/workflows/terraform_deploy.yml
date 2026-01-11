@@ -33,14 +33,14 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          cli_config_credentials_token: ${{ secrets.TERRAFORM_API_TOKEN }}
+          cli_config_credentials_token: ${{ secrets.TERRAFORM_API_KEY }}
 
       - name: Terraform Format Check
         run: terraform fmt -check
 
       - name: Debug Secret Access
         run: |
-          if [ -z "${{ secrets.TERRAFORM_API_TOKEN }}" ]; then
+          if [ -z "${{ secrets.TERRAFORM_API_KEY }}" ]; then
             echo "BŁĄD: Sekret jest PUSTY! Sprawdź nazwę w Settings -> Secrets."
             exit 1
           else
