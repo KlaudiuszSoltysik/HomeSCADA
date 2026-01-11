@@ -38,6 +38,15 @@ jobs:
       - name: Terraform Format Check
         run: terraform fmt -check
 
+      - name: Debug Secret Access
+        run: |
+          if [ -z "${{ secrets.TERRAFORM_API_TOKEN }}" ]; then
+            echo "BŁĄD: Sekret jest PUSTY! Sprawdź nazwę w Settings -> Secrets."
+            exit 1
+          else
+            echo "Sekret został znaleziony (wartość jest zamaskowana)."
+          fi
+
       - name: Terraform Init
         run: terraform init
 
