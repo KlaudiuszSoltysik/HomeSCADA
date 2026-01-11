@@ -1,4 +1,4 @@
-name: Terraform CI/CD
+name: "Terraform CI/CD"
 
 on:
   push:
@@ -17,11 +17,14 @@ jobs:
     name: "Terraform"
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: ./terraform
+
     env:
       TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       TF_VAR_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       TF_VAR_zone_id: ${{ secrets.CLOUDFLARE_ZONE_ID }}
-      TF_TOKEN_app_terraform_io: ${{ secrets.TERRAFORM_API_TOKEN }}
 
     steps:
       - name: Checkout
@@ -29,29 +32,23 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
+        with:
+          cli_config_credentials_token: ${{ secrets.TERRAFORM_API_TOKEN }}
 
       - name: Terraform Format Check
-        id: fmt
         run: terraform fmt -check
-        continue-on-error: true
 
       - name: Terraform Init
-        id: init
         run: terraform init
-        working-directory: ./terraform
 
       - name: Terraform Validate
-        id: validate
         run: terraform validate -no-color
-        working-directory: ./terraform
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color -input=false
-        working-directory: ./terraform
         if: github.event_name == 'pull_request'
+        run: terraform plan -no-color -input=false
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false
-        working-directory: ./terraform
