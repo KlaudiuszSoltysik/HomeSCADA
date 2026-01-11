@@ -38,15 +38,6 @@ jobs:
       - name: Terraform Format Check
         run: terraform fmt -check
 
-      - name: Debug Secret Access
-        run: |
-          if [ -z "${{ secrets.TERRAFORM_API_KEY }}" ]; then
-            echo "BŁĄD: Sekret jest PUSTY! Sprawdź nazwę w Settings -> Secrets."
-            exit 1
-          else
-            echo "Sekret został znaleziony (wartość jest zamaskowana)."
-          fi
-
       - name: Terraform Init
         run: terraform init
 
@@ -56,8 +47,16 @@ jobs:
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request'
-        run: terraform plan -no-color -input=false
+        run: |
+          terraform plan -no-color -input=false \
+            -var="cloudflare_api_token=${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -var="account_id=${{ secrets.CLOUDFLARE_ACCOUNT_ID }}" \
+            -var="zone_id=${{ secrets.CLOUDFLARE_ZONE_ID }}"
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-        run: terraform apply -auto-approve -input=false
+        run: |
+          terraform apply -auto-approve -input=false \
+            -var="cloudflare_api_token=${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -var="account_id=${{ secrets.CLOUDFLARE_ACCOUNT_ID }}" \
+            -var="zone_id=${{ secrets.CLOUDFLARE_ZONE_ID }}"
