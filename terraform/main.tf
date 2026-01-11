@@ -1,5 +1,5 @@
 terraform {
-    backend "remote" {
+  backend "remote" {
     organization = "klaudiusz_soltysik_development"
 
     workspaces {
