@@ -176,7 +176,7 @@ if __name__ == "__main__":
     b.add_wall(w20)
     b.add_wall(w21)
 
-    weather_provider = WeatherProvider("weather_history.csv")
+    weather_provider = WeatherProvider("../weather_history.csv")
     engine = SimulationEngine(b)
 
     WS_SERVER_URL = "ws://localhost:6101/ws"

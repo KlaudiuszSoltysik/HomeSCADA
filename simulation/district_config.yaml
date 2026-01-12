@@ -6,13 +6,17 @@ metadata:
   longitude: 16.952679
   elevation: 75.0
   timezone: "Europe/Warsaw"
+  ground_temperature: 8.5
 
 buildings:
-  - id: "building1"
+  - id: "b1"
+
     standards:
+      ach_wind_coef: 0.1
       wall_ext:
         u_value: 0.15
         heat_capacity_per_m2: 45000
+        absorptance: 0.5
       wall_int_load:
         u_value: 1.0
         heat_capacity_per_m2: 45000
@@ -22,9 +26,11 @@ buildings:
       roof:
         u_value: 0.1
         heat_capacity_per_m2: 25000
+        absorptance: 0.7
       floor_ground:
         u_value: 0.25
         heat_capacity_per_m2: 40000
+        absorptance: 0
       slab_inter:
         u_value: 1.0
         heat_capacity_per_m2: 65000
@@ -39,6 +45,7 @@ buildings:
         u_value: 1.1
       room:
         heat_capacity_per_m2: 10000
+
     apartments:
       - id: "apt1"
         name: "Apartment 1"
@@ -551,48 +558,68 @@ buildings:
         to: "ground"
         area: 34.0
         thermal_code: floor_ground
+        azimuth: 0
+        tilt: 180
       - type: "floor"
         from: "apt1:room2"
         to: "ground"
         area: 6.0
         thermal_code: floor_ground
+        azimuth: 0
+        tilt: 180
       - type: "floor"
         from: "apt2:room1"
         to: "ground"
         area: 34.0
         thermal_code: floor_ground
+        azimuth: 0
+        tilt: 180
       - type: "floor"
         from: "apt2:room2"
         to: "ground"
         area: 6.0
         thermal_code: floor_ground
+        azimuth: 0
+        tilt: 180
       - type: "floor"
         from: "apt7:room1"
         to: "ground"
         area: 34.0
         thermal_code: floor_ground
+        azimuth: 0
+        tilt: 180
       - type: "roof"
         from: "apt5:room1"
         to: "outside"
         area: 34.0
         thermal_code: roof
+        azimuth: 0
+        tilt: 0
       - type: "roof"
         from: "apt5:room2"
         to: "outside"
         area: 6.0
         thermal_code: roof
+        azimuth: 0
+        tilt: 0
       - type: "roof"
         from: "apt6:room1"
         to: "outside"
         area: 34.0
         thermal_code: roof
+        azimuth: 0
+        tilt: 0
       - type: "roof"
         from: "apt6:room2"
         to: "outside"
         area: 6.0
         thermal_code: roof
+        azimuth: 0
+        tilt: 0
       - type: "roof"
         from: "apt7:room3"
         to: "outside"
         area: 34.0
         thermal_code: roof
+        azimuth: 0
+        tilt: 0
