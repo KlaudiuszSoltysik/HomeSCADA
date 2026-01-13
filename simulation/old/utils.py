@@ -23,4 +23,4 @@ def add_altitude_and_azimuth(filename, lat, lon):
         print(f"Error: {e}")
 
 
-add_altitude_and_azimuth("weather_history.csv", 52.39, 16.95)
+add_altitude_and_azimuth("../weather_history.csv", 52.39, 16.95)

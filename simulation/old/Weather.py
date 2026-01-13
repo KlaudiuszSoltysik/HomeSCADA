@@ -36,7 +36,7 @@ class WeatherProvider:
     def get_current_weather(self, sim_parameters):
         weather = None
         if sim_parameters["IsAuto"] and not self.weather_df.empty:
-            weather = self._get_weather_from_df(timestamp=sim_parameters["SimTimestamp"].round("H"))
+            weather = self._get_weather_from_df(timestamp=sim_parameters["SimTimestamp"].round("h"))
 
         if weather is None:
             weather = Weather(
