@@ -12,7 +12,7 @@ class DistrictSimulation:
     def __init__(self, config_path, weather_path):
         parser = DistrictModelParser(config_path)
         metadata = parser.raw_data["metadata"]
-        G, G_ext_air, G_ext_ground, C, N, external_connections, standards = parser.parse()
+        G, G_ext_air, G_ext_ground, C, N, external_connections, standards, nodes = parser.parse()
 
         self.thermal_solver = ThermalSolver(
             G=G,
@@ -25,9 +25,10 @@ class DistrictSimulation:
         self.weather_solver = WeatherSolver(external_connections, standards, N)
 
         self.current_time = pd.Timestamp("2024-01-01 00:00:00").tz_localize(metadata["timezone"])
-        self.weather_service = WeatherService(weather_path, metadata["timezone"], metadata["latitude"], metadata["longitude"])
+        self.weather_service = WeatherService(weather_path, metadata["timezone"], metadata["latitude"],
+                                              metadata["longitude"])
 
-        self.index_to_id = {v: k for k, v in parser.nodes.items()}
+        self.index_to_id = {v: k for k, v in nodes.items()}
 
     def run_step(self, dt_seconds):
         weather = self.weather_service.get_weather(self.current_time)
@@ -49,6 +50,6 @@ class DistrictSimulation:
 
         return {
             "timestamp": output_timestamp,
-            "weather": weather.to_dict() if hasattr(weather, "to_dict") else weather,
+            "weather": weather,
             "room_temps": room_temps
         }

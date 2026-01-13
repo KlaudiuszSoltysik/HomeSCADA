@@ -1,6 +1,9 @@
 ﻿import math
+
 import numpy as np
 
+
+# TODO: fix weather gains
 class WeatherSolver:
     RHO_CP_AIR = 1200
     H_EXTERNAL = 25.0
@@ -32,7 +35,8 @@ class WeatherSolver:
 
                     wall_net_area = connection["area_gross"] - win_area_sum
                     t_code = self.standards[connection["thermal_code"]]
-                    q_net[room_idx] += wall_net_area * sun_rad * t_code["absorptance"] * cos_theta * (t_code["u_value"] / 25.0)
+                    q_net[room_idx] += wall_net_area * sun_rad * t_code["absorptance"] * cos_theta * (
+                            t_code["u_value"] / 25.0)
 
         for connection in self.connections:
             room_idx = connection["room_idx"]
@@ -42,6 +46,7 @@ class WeatherSolver:
 
             n_wind = (connection["ach_wind_coef"] * wind_speed * exposure) / 3600
 
-            q_net[room_idx] += n_wind * connection["volume"] * 1200 * (temperature_ext - temperature_rooms[room_idx])
+            q_net[room_idx] += n_wind * connection["volume"] * self.RHO_CP_AIR * (
+                    temperature_ext - temperature_rooms[room_idx])
 
         return q_net
