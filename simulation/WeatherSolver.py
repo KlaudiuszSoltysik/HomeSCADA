@@ -3,7 +3,6 @@
 import numpy as np
 
 
-# TODO: fix weather gains
 class WeatherSolver:
     RHO_CP_AIR = 1200
     H_EXTERNAL = 25.0
@@ -29,20 +28,23 @@ class WeatherSolver:
                 if cos_theta > 0:
                     room_idx = connection["room_idx"]
                     win_area_sum = 0
+
                     for window in connection["windows"]:
                         q_net[room_idx] += window["area"] * sun_rad * window["shgc"] * cos_theta
                         win_area_sum += window["area"]
 
                     wall_net_area = connection["area_gross"] - win_area_sum
-                    t_code = self.standards[connection["thermal_code"]]
-                    q_net[room_idx] += wall_net_area * sun_rad * t_code["absorptance"] * cos_theta * (
-                            t_code["u_value"] / 25.0)
+
+                    q_net[room_idx] += (wall_net_area * sun_rad * connection["absorptance"] * cos_theta * (connection["u_value"] / self.H_EXTERNAL))
 
         for connection in self.connections:
             room_idx = connection["room_idx"]
 
-            wind_az_diff = math.radians(wind_direction - connection["azimuth"])
-            exposure = (math.cos(wind_az_diff) + 1) / 2
+            if connection["tilt"] < 10:
+                exposure = 1.0
+            else:
+                wind_az_diff = math.radians(wind_direction - connection["azimuth"])
+                exposure = (math.cos(wind_az_diff) + 1) / 2
 
             n_wind = (connection["ach_wind_coef"] * wind_speed * exposure) / 3600
 
