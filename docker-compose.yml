@@ -55,7 +55,6 @@ services:
   rabbitmq:
     container_name: ddt_rabbitmq
     image: rabbitmq:3.12-management-alpine
-    restart: always
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
@@ -119,6 +118,26 @@ services:
           memory: 256M
         reservations:
           memory: 64M
+
+  simulation:
+    container_name: ddt_simulation
+    build:
+      context: ./simulation
+      dockerfile: Dockerfile
+    environment:
+      - RABBITMQ_CONNECTION_STRING=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - ddt_net
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+        reservations:
+          memory: 128M
 
   watchtower:
     image: containrrr/watchtower
