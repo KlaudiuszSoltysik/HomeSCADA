@@ -1,5 +1,6 @@
 using backend;
-using backend.Utils;
+using backend.Consumers;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -7,9 +8,31 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
-
 builder.Services.AddSignalR();
-builder.Services.AddSingleton<SimulationService>();
+
+builder.Services.AddMassTransit(x =>
+{
+    x.AddConsumer<TelemetryConsumer>();
+
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        var connectionString = builder.Configuration.GetConnectionString("RabbitMqConnection");
+
+        var uri = new Uri(connectionString ?? throw new InvalidOperationException(message: "Invalid connection string."));
+
+        cfg.Host(uri.Host, (ushort)uri.Port, uri.AbsolutePath, h =>
+        {
+            var parts = uri.UserInfo.Split(':');
+            h.Username(parts[0]);
+            h.Password(parts[1]);
+        });
+
+        cfg.ReceiveEndpoint("district.telemetry", e =>
+        {
+            e.ConfigureConsumer<TelemetryConsumer>(context);
+        });
+    });
+});
 
 if (builder.Environment.EnvironmentName != "Testing")
 {
@@ -30,22 +53,6 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-app.MapHub<SimulationHub>("/simulation-hub");
-app.UseWebSockets();
-app.Use(async (context, next) =>
-{
-    if (context.Request.Path == "/ws" && context.WebSockets.IsWebSocketRequest)
-    {
-        using var webSocket = await context.WebSockets.AcceptWebSocketAsync();
-        var service = context.RequestServices.GetRequiredService<SimulationService>();
-        await service.StartListening(webSocket);
-    }
-    else
-    {
-        await next();
-    }
-});
-
 if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Testing"))
 {
     app.MapOpenApi();
@@ -53,10 +60,10 @@ if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Testing"))
 }
 
 app.UseCors();
-
 app.UseAuthorization();
-
 app.MapControllers();
+
+// app.MapHub<SimulationHub>("/hubs/simulation");
 
 app.Run();
 

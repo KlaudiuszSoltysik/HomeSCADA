@@ -1,7 +1,7 @@
 
 services:
   postgres:
-    image: postgres:15-alpine
+    image: postgres:18.1-alpine3.23
     container_name: ddt_postgres
     env_file: .env
     environment:
@@ -11,7 +11,7 @@ services:
     ports:
       - "127.0.0.1:${POSTGRES_PORT}:5432"
     volumes:
-      - ./docker/postgres/prod_data:/var/lib/postgresql/data
+      - ./docker/postgres/data:/var/lib/postgresql
     networks:
       - ddt_net
     healthcheck:
@@ -54,12 +54,13 @@ services:
 
   rabbitmq:
     container_name: ddt_rabbitmq
-    image: rabbitmq:3.12-management-alpine
+    image: rabbitmq:4.2.2-management-alpine
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
     ports:
-      - "127.0.0.1:${RABBITMQ_PORT}:15672"
+      - "${RABBITMQ_PORT}:15672"
+      - "5672:5672"
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
     networks:
@@ -84,7 +85,7 @@ services:
       - "com.centurylinklabs.watchtower.enable=true"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__PostgresConnection=Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      - ConnectionStrings__PostgresConnection=Host=postgres;Port=${RABBITMQ_USER};Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
       - ConnectionStrings__RabbitMqConnection=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
     depends_on:
       postgres:
@@ -171,10 +172,10 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "0.25"
-          memory: 128M
+          cpus: "0.5"
+          memory: 512M
         reservations:
-          memory: 64M
+          memory: 256M
 
   prometheus:
     image: prom/prometheus:latest
